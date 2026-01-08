@@ -2,9 +2,11 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
+
 import router from "./routes/testRoutes.js";
 import { connectDb } from "./config/db.js";
 import authRouter from "./routes/authRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 
 
 dotenv.config()
@@ -23,6 +25,8 @@ app.use(morgan("dev"))
 ////////routes
 app.use("/api/v1/test", router)
 app.use("/api/v1/auth", authRouter)
+app.use("/api/v1/user", userRouter)
+
 
 app.get("/", (req,res)=>{
     return res.status(200).send("<h1>Welcome to food server APP API BASE PROJECT </h1>")
