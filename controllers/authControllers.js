@@ -12,9 +12,9 @@ const jwt_secret = process.env.JWT_SECRET;
 
 export const registerController = async(req, res)=>{
     try {
-        const {userName, email, password, address, phone} = req.body;
+        const {userName, email, password, address, phone, answer} = req.body;
 
-        if (!userName || !email || !password || !address || !phone){
+        if (!userName || !email || !password || !address || !phone || !answer){
             return res.status(400).json({success: false, message : "please proide all fields"})
         }
         
@@ -26,7 +26,7 @@ export const registerController = async(req, res)=>{
 
         const hashedPassword =await bcrypt.hash(password,10)
 
-        const user = new User({userName, email, password : hashedPassword, address, phone});
+        const user = new User({userName, email, password : hashedPassword, address, phone, answer});
 
         await user.save();
 

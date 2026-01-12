@@ -1,5 +1,5 @@
 import express from "express";
-import { getUserCont, updateUserController } from "../controllers/userController.js";
+import { getUserCont, resetPasswordController, updateUserController } from "../controllers/userController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
 
@@ -11,7 +11,8 @@ userRouter.get("/getUser",protect, getUserCont)
 ////UPDATE PROFILE
 userRouter.put("/updateUser", protect, updateUserController)
 
-
+//////RESET PASSWORD
+userRouter.post("/resetPassword", protect, resetPasswordController)
 
 
 export default userRouter;
