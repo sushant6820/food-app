@@ -58,42 +58,89 @@ export const updateUserController = async (req, res) => {
   }
 };
 
-
-export const resetPasswordController = async(req, res)=>{
-
+export const resetPasswordController = async (req, res) => {
   try {
-    const{email, newPassword, answer} = req.body;
-    if (!email || !newPassword || !answer){
-      return res.status(400).json({
-        success : false,
-        message : "please provide all fields"
-      }
-      )
-    }
-
-    const user = await User.findOne({email,answer});
-
-    if (!user){
+    const { email, newPassword, answer } = req.body;
+    if (!email || !newPassword || !answer) {
       return res.status(400).json({
         success: false,
-        message : "user not found or Invalid answer"
-      })
+        message: "please provide all fields",
+      });
     }
 
-    const hashedPassword =await bcrypt.hash(newPassword,10)
-     user.password = hashedPassword;
-     await user.save();
+    const user = await User.findOne({ email, answer });
 
-     return res.status(200).json({
-      success : true,
-      message : "message reset successfully"
-     })
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "user not found or Invalid answer",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "message reset successfully",
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       success: false,
       message: "error in Password reset API",
-      error
-    })
+      error,
+    });
   }
-}
+};
+
+export const updateUserPassword = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "please provide old or new password",
+      });
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isMatch) {
+      return res.status(500).json({
+        success: false,
+        message: "invalid old password",
+      });
+    }
+
+    user.password = newPassword;
+
+    const hashedPassword = await bcrypt.hash(newPassword,10);
+    user.password = hashedPassword;
+
+    await user.save();
+
+    return res.status(200).json({
+      success : true,
+      message : "password updated successfully"
+    })
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "error in password update API",
+      error,
+    });
+  }
+};
