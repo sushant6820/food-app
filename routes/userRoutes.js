@@ -1,5 +1,5 @@
 import express from "express";
-import { getUserCont, resetPasswordController, updateUserController, updateUserPassword } from "../controllers/userController.js";
+import { deleteProfileCont, getUserCont, resetPasswordController, updateUserController, updateUserPassword } from "../controllers/userController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
 
@@ -17,5 +17,7 @@ userRouter.post("/resetPassword", protect, resetPasswordController)
 ///////////UPDATE USER PASSWORD
 userRouter.post("/updateUserPassword", protect, updateUserPassword)
 
+////////DELETE USER
+userRouter.delete("/deleteUser/:id", protect, deleteProfileCont)
 
 export default userRouter;
