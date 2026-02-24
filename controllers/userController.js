@@ -144,3 +144,23 @@ export const updateUserPassword = async (req, res) => {
     });
   }
 };
+
+
+//////////////////DELETE PROFILE
+
+export const deleteProfileCont =async (req, res)=>{
+try {
+  await User.findByIdAndDelete(req.params.id);
+  return res.status(200).json({
+    success: true,
+    message : "your account has been deleted"
+  })
+} catch (error) {
+  console.log(error)
+  return res.status(500).json({
+    success : false,
+    message : "Error in delete profile API",
+    error
+  })
+}
+}
